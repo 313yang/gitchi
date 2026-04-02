@@ -1,0 +1,15 @@
+{
+  "name": "gitchi",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@vercel/kv": "^3.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
+  }
+}
