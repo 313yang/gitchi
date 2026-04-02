@@ -49,22 +49,22 @@ GitHub README
 Based on the number of days with at least one commit in the last 30 days, **counted from registration date**.
 
 | Days with commits (last 30d) | Stage |
-|---|---|
-| 0–2 | Egg |
-| 3–6 | Baby |
-| 7–13 | Teen |
-| 14+ | Adult |
+| ---------------------------- | ----- |
+| 0–2                          | Egg   |
+| 3–6                          | Baby  |
+| 7–13                         | Teen  |
+| 14+                          | Adult |
 
 - Not streak-based — missing a day does not reset progress
 - Registration date stored in Vercel KV on first request, preventing instant adult status for existing GitHub users
 
 ### Status & Death
 
-| Condition | State |
-|---|---|
-| hunger > 0% | Normal |
+| Condition                              | State  |
+| -------------------------------------- | ------ |
+| hunger > 0%                            | Normal |
 | hunger = 0%, last commit 4–14 days ago | Danger |
-| last commit > 14 days ago | Dead |
+| last commit > 14 days ago              | Dead   |
 
 - On death: pet shows dead state
 - Revival: any new commit restarts from Egg stage
@@ -74,24 +74,27 @@ Based on the number of days with at least one commit in the last 30 days, **coun
 ## Visual Design
 
 ### Style
+
 - **ASCII art** rendered inside an SVG with a monospace pixel font
 - **Black and white only** — no color
 - **Retro terminal / LCD game aesthetic**
 - All text in English
 
 ### SVG Structure
+
 ```
 ┌─────────────────────────┐
 │  GITCHI                 │
 │                         │
-│      _,--._             │
-│     ( ·  · )            │
-│    /[______]\           │
-│     ``    ``            │
+│      /\  /\             │
+│    ,( ._. ),            │
+│   /(  /u\  )\           │
+│      '-----'            │
+│       `   `             │
 │                         │
 │  HUNGER  [████░░░░] 50% │
 │  STAGE   TEEN           │
-│  STREAK  12 days        │
+│  DAYS    12 / 30        │
 └─────────────────────────┘
 ```
 
@@ -101,42 +104,66 @@ Based on the number of days with at least one commit in the last 30 days, **coun
 
 ### Stage ASCII Sprites
 
+Cat-shaped character. Eyes expressed as `.`. Grows in detail, not drastically in size.
+
 **Egg**
+
 ```
-  ,---.
- ( o o )
-  `---'
+    ___,
+  /     \
+,/       \
+ |       |
+  \,___,/
 ```
 
 **Baby**
+
 ```
-   _,--._
-  ( ·  · )
-   `----'
+   /\_/\
+  ( ._. )
+  (  u  )
+   '---'
 ```
 
-**Teen**
+**Teen** — whiskers added
+
 ```
-   _,--._
-  ( ·  · )
- /[______]\
-  ``    ``
+   /\_/\
+ ,( ._. ),
+  (  u  )
+   '----'
 ```
 
-**Adult**
+**Adult** — arms + tiny paws
+
 ```
-  __|__
- ( o o )
-/|_____|\ 
-  |   |
+   /\_/\
+ ,( ._. ),
+.[   u   ].
+  '-----'
+   `   `
 ```
 
 **Dead**
+
 ```
-   _,--._
-  ( x  x )
- /[______]\
-  RIP   ;;
+   /\.__/\
+ ,( x . x ),
+  (  ---  )
+   '-----'
+  [ R.I.P ]
+```
+
+### Eye Animation Frames
+
+Cycles on a timer inside the SVG using `<animate>` opacity switching.
+
+```
+Frame 1 (normal):     . _ .
+Frame 2 (look right): .  _.
+Frame 3 (look left):  ._  .
+Frame 4 (blink):      - _ -
+Frame 5 (normal):     . _ .
 ```
 
 ---
@@ -147,17 +174,19 @@ Based on the number of days with at least one commit in the last 30 days, **coun
 
 Returns an SVG image.
 
-| Param | Required | Description |
-|---|---|---|
-| `username` | yes | GitHub username |
+| Param      | Required | Description     |
+| ---------- | -------- | --------------- |
+| `username` | yes      | GitHub username |
 
 **Response headers:**
+
 ```
 Content-Type: image/svg+xml
 Cache-Control: no-cache, max-age=3600
 ```
 
 **First request behavior:**
+
 - Checks Vercel KV for registration date
 - If not found, stores today as `registered_at`
 - All growth calculations use `registered_at` as the start date
@@ -166,11 +195,11 @@ Cache-Control: no-cache, max-age=3600
 
 ## Data Sources (GitHub Public API)
 
-| Data needed | Endpoint |
-|---|---|
-| Commits today | `GET /repos/{owner}/{repo}/commits` or GraphQL contributions |
-| Days with commits (last 30d) | GitHub GraphQL `contributionCalendar` |
-| Last commit date | GraphQL `contributionCalendar` |
+| Data needed                  | Endpoint                                                     |
+| ---------------------------- | ------------------------------------------------------------ |
+| Commits today                | `GET /repos/{owner}/{repo}/commits` or GraphQL contributions |
+| Days with commits (last 30d) | GitHub GraphQL `contributionCalendar`                        |
+| Last commit date             | GraphQL `contributionCalendar`                               |
 
 Uses GitHub GraphQL API v4. The **service** uses a server-side GitHub token (stored as a Vercel env var) to call the API — users do not need to authenticate or provide any token.
 
@@ -178,13 +207,13 @@ Uses GitHub GraphQL API v4. The **service** uses a server-side GitHub token (sto
 
 ## Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Runtime | Vercel Serverless Functions (Node.js) |
-| State | Vercel KV (registration date only) |
-| GitHub data | GitHub GraphQL API (public, no auth) |
-| SVG rendering | String template (no external lib) |
-| Font | Press Start 2P (Google Fonts embed in SVG) |
+| Layer         | Choice                                     |
+| ------------- | ------------------------------------------ |
+| Runtime       | Vercel Serverless Functions (Node.js)      |
+| State         | Vercel KV (registration date only)         |
+| GitHub data   | GitHub GraphQL API (public, no auth)       |
+| SVG rendering | String template (no external lib)          |
+| Font          | Press Start 2P (Google Fonts embed in SVG) |
 
 ---
 
