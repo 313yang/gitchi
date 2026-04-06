@@ -2,29 +2,48 @@
 
 A GitHub profile pet that grows as you commit.
 
-## Usage
+---
 
-Add this to your GitHub profile README:
+## Quick Start
+
+Add this one line to your GitHub profile README:
 
 ```md
 ![Gitchi](https://gitchi.vercel.app/api/pet?username=YOUR_USERNAME)
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username. Your Gitchi appears automatically on first visit.
+Replace `YOUR_USERNAME` with your GitHub username. That's it.
 
-## How it works
+---
+
+## GitHub Profile README Setup
+
+1. Go to `github.com/YOUR_USERNAME/YOUR_USERNAME` (create this repo if it doesn't exist)
+2. Edit `README.md`
+3. Paste the image link above
+4. Commit — your Gitchi will appear on your profile instantly
+
+> **First visit:** Gitchi registers your start date automatically. Growth is counted from that day forward.
+
+> **Private commits:** Go to GitHub → Settings → Profile → check **"Include private contributions on my profile"** to count private commits too.
+
+---
+
+## How It Works
 
 | Activity | Effect |
 |---|---|
-| Commit today | +5% hunger (max 100%) |
-| No commits | -1% hunger/hour |
-| Commit regularly | Pet grows through stages |
+| Commit today | +5% hunger per commit (max 100%) |
+| No commits | −1% hunger per hour |
+| Commit daily | Pet grows through stages |
 | 14 days no commit | Pet dies 💀 |
-| New commit after death | Revive from Egg |
+| Commit after death | Revive from Egg |
+
+---
 
 ## Stages
 
-Growth is based on how many days in the last 30 days (since you added Gitchi) had at least one commit.
+Growth is based on how many days in the last 30 days had at least one commit, counted from when you first added Gitchi.
 
 | Days active (last 30d) | Stage |
 |---|---|
@@ -33,10 +52,3 @@ Growth is based on how many days in the last 30 days (since you added Gitchi) ha
 | 7–13 | 😸 Teen |
 | 14+ | 😺 Adult |
 
-## Deploy your own
-
-1. Clone this repo
-2. Deploy to [Vercel](https://vercel.com)
-3. Add a `GITHUB_TOKEN` env var (needs `read:user` scope)
-4. Add Vercel KV to your project in the Vercel dashboard
-5. Share your URL: `https://your-app.vercel.app/api/pet?username=YOU`
